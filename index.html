@@ -359,7 +359,103 @@
     font-weight:700;
   }
 
-  /* ---------- CONTACT / BOOK ---------- */
+  /* ---------- REVIEWS ---------- */
+  .reviews-shell{
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:var(--bg-elev);
+    padding:40px;
+  }
+  .reviews-top{
+    display:flex; align-items:center; justify-content:space-between;
+    flex-wrap:wrap; gap:20px;
+  }
+  .reviews-top h3{
+    font-size:clamp(26px,3vw,34px);
+    color:var(--cream);
+  }
+  .reviews-top p{
+    color:var(--muted); font-size:14px; margin-top:6px;
+  }
+  .reviews-toggle{
+    background:var(--gold);
+    color:#0b0b0c;
+    padding:14px 26px;
+    font-weight:800;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    border:none;
+    border-radius:2px;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s ease;
+  }
+  .reviews-toggle:hover{background:var(--gold-bright);}
+  .reviews-body{
+    display:none;
+    margin-top:36px;
+  }
+  .reviews-body.open{display:block;}
+  .reviews-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:18px;
+  }
+  .review-card{
+    background:#000;
+    border:1px solid #232019;
+    border-radius:4px;
+    padding:22px;
+    animation: fadeIn .4s ease;
+  }
+  @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .review-card .quote-mark{
+    font-family:'Anton',sans-serif;
+    font-size:32px;
+    color:var(--gold);
+    line-height:1;
+    margin-bottom:6px;
+    display:block;
+  }
+  .review-card p{
+    font-size:14px;
+    color:#d8d3c4;
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+  .review-card .name{
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--gold-bright);
+    text-transform:lowercase;
+  }
+  .reviews-more{
+    display:flex; justify-content:center;
+    margin-top:30px;
+  }
+  .load-more-btn{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--cream);
+    padding:14px 30px;
+    font-weight:700;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:0.07em;
+    border-radius:2px;
+    cursor:pointer;
+    transition:border-color .15s ease, color .15s ease;
+  }
+  .load-more-btn:hover{border-color:var(--gold); color:var(--gold-bright);}
+  .load-more-btn:disabled{opacity:0.4; cursor:default;}
+  .reviews-count{
+    text-align:center;
+    margin-top:14px;
+    font-family:'Space Mono',monospace;
+    font-size:12px;
+    color:var(--muted);
+  }
   .contact{
     background:var(--bg-elev);
     border:1px solid var(--line);
@@ -449,6 +545,9 @@
     .nav-toggle{display:block;}
     .gallery-grid{grid-template-columns:repeat(2,1fr);}
     .notice-grid{grid-template-columns:1fr;}
+    .reviews-grid{grid-template-columns:1fr;}
+    .reviews-shell{padding:26px;}
+    .reviews-top{flex-direction:column; align-items:flex-start;}
     .contact{grid-template-columns:1fr; padding:32px;}
     .menu-row{flex-wrap:wrap;}
     .menu-row .leader{display:none;}
@@ -627,6 +726,224 @@
     </div>
   </div>
 </section>
+
+<div class="stripe-rule"></div>
+
+<section id="reviews">
+  <div class="wrap">
+    <div class="reviews-shell">
+      <div class="reviews-top">
+        <div>
+          <div class="section-tag">Client Love</div>
+          <h3>What Clients Are Saying</h3>
+          <p>150+ five-star reviews from real clients on Instagram.</p>
+        </div>
+        <button class="reviews-toggle" id="reviewsToggle">See What Clients Are Saying</button>
+      </div>
+
+      <div class="reviews-body" id="reviewsBody">
+        <div class="reviews-grid" id="reviewsGrid"></div>
+        <div class="reviews-more">
+          <button class="load-more-btn" id="loadMoreBtn">Load More Reviews</button>
+        </div>
+        <div class="reviews-count" id="reviewsCount"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const reviews = [
+    { name: "qaharsufizada", text: "There's something special about a barber who doesn't just cut hair but truly understands it. Today, I sat in the chair expecting just a trim, but what I got was an experience — his precision, the way he moved with confidence, made it clear he wasn't just cutting, he was crafting. The cut was flawless. Crisp. Clean. It felt like more than just a haircut, it felt like self-care." },
+    { name: "christianbalkaran", text: "5 star experience. Clean and professional setup with great music playing. Talked with me to figure out exactly what I was looking for, then gave me tips on how to style it. The best lineup I've ever gotten from any barber — highly recommend him no matter what kind of hair you have." },
+    { name: "samadalam2111", text: "10/10 barber, his place is really nice and doesn't make me feel uncomfortable and his cuts are 10/10. I used to go to a different barber and hated it every time — every time I leave his place I love it." },
+    { name: "hamza.k.10", text: "Takes his time to make sure you look the best, great experience and the deep talks I had with this man changed my perspective on life. Highly recommend." },
+    { name: "jathu1234o", text: "My man was the best — when I was talking to him about school and stuff he gave me some advice. The best place you can go for a cut, 11/10." },
+    { name: "vivaan.p._", text: "After getting the haircut I realized there are bigger things in life. I learned to stop complaining about the little things and start to look at the bigger picture. Get a cut from 647cutz — life lesson learned." },
+    { name: "ekam.parihar", text: "647cutz is the place to be — bro really did a good job on the tapers and knew exactly what I wanted, didn't miss a step." },
+    { name: "kibrahim9642", text: "He's a good barber. First time getting anything like a fade and he didn't disappoint. I definitely recommend trying him out." },
+    { name: "therealcalvinlui", text: "This guy is a straight wizard with the cuts. Got some eyes from both guys and girls, and the aunties 👀" },
+    { name: "nathanielbalkaran", text: "Amazing cut, more people started talking to me after getting it. Great service, didn't rush and took time to talk afterwards. 🙌" },
+    { name: "sriharsha.akula", text: "Top tier work fr. Love my haircut, no complaints at all. Clean and sharp — I'll be back real soon." },
+    { name: "claytonissocool", text: "10/10 I really f w the haircut, very friendly and clean environment. The haircut really suits my look and he got me so fresh and clean. 🔥🔥🔥" },
+    { name: "_aryan.m8", text: "10/10 definitely a great barber. Great prices & a nice atmosphere. Love going back." },
+    { name: "thabeshan_07", text: "Great cut, 10/10, and is a really friendly guy. His haircut really transforms your whole look" },
+    { name: "shivam.pa02", text: "Good barber, took appointment on short notice and didn't rush through it. 🔥🔥" },
+    { name: "rayanbad.8", text: "Great cut, amazing service, and he knows how to cut curls. Definitely coming back 🔥" },
+    { name: "maisum.xx", text: "After traveling the world looking for the best barber, safe to say 647 is the 🐐" },
+    { name: "rohit.jawahar", text: "Great cuts, great price and great guy. All round great service by Mr 647cutz" },
+    { name: "tj_0268", text: "Great service, bro takes his time and makes you look your best, and just gives great cuts. Would recommend" },
+    { name: "izhan.vasti", text: "Great service, cuts. Makes great convo, down to earth guy fr. Definitely get cuts from him" },
+    { name: "dev.chandy", text: "Lowkey knows how to cut hair properly, also takes time and makes sure the end result is good" },
+    { name: "fawad.mazhar", text: "Absolutely clean cut for a great price, took his time, plus very responsive. Overall great service. 🔥" },
+    { name: "enocht10", text: "Great service, took his time and was patient with the cut, good price. Recommend going to him. 🔥" },
+    { name: "ashwinthanes", text: "Clean cut, took his time, good price, good barber 10/10" },
+    { name: "big_jakie", text: "Quality cuts, made sure to put that work in and get it crispy — book with him asap if you're tryna get fresh" },
+    { name: "00jules_", text: "Brother got me right last minute for grad and cut me even though he had a lot going on that day, and bro charges an affordable price. I'll def be back 🙏" },
+    { name: "zulfiqar.m_", text: "Great service. Very detailed. Great kid, would highly recommend!" },
+    { name: "whatsaaronn", text: "I can't lie, this is the best cut I've gotten for the best price I've seen too, coming back for sure 🙏🙏" },
+    { name: "dravywavy24", text: "Got transformed into a new look, good cut/price, and will come back again. 👏🔥❤️" },
+    { name: "danushiyan_", text: "Barber blessed me up. Did a solid cut for a great price. Definitely coming back 🙌" },
+    { name: "kayd3nn18", text: "Really good barber with really good prices, the cuts are fire and he saved me — def going back again 🔥" },
+    { name: "aa_di7939", text: "It's a good haircut, really good price, the barber's really nice" },
+    { name: "1shaans", text: "Excellent service, very respectful and kind. Gives the best cuts in Markham 🔥🔥🔥" },
+    { name: "nireson_6ixx", text: "Sick barber — the first time I've ever had a barber give me the haircut I wanted just like how I imagined it" },
+    { name: "champagnnepaki", text: "Great service, always replies on time. Best barber in the GTA area, highly recommend" },
+    { name: "s_des7", text: "10/10 great cut and a nice experience" },
+    { name: "serujan_05", text: "10/10 amazing price for such good cuts, and also was an amazing experience there" },
+    { name: "damanjeet_minhas", text: "10/10 best barber in Markham 🔥🔥" },
+    { name: "jivand_", text: "10 out of 10, would highly recommend! 🔥" },
+    { name: "ehsan.szn", text: "Came for the first time today and he got me right, fade and beard def recommend 🔥💯" },
+    { name: "nathanluong012", text: "Best barber in Markham with best prices 🔥" },
+    { name: "omar_k.07", text: "Haircut is clean af and the taper is so fire 🔥 def coming back" },
+    { name: "_ethanchengg", text: "Got a nice cut from this guy, pays attention to detail. 🙌" },
+    { name: "h.r.h101", text: "Nicest fade I've ever had in my life, this man knows how to cut properly" },
+    { name: "sagar.c", text: "Definitely replaced my old barber 🔥! Appreciate you, brother." },
+    { name: "rayyanhauqe", text: "Clean cuts for a good price, couldn't ask for more." },
+    { name: "_alisufizada", text: "The cutz are spot on. Bro is lowkey goated 🙌" },
+    { name: "t_tysondangg", text: "Good cuts. He's my new barber 🔥" },
+    { name: "_.pavi07", text: "Fire cuts, best barber in Toronto 🔥🔥🔥" },
+    { name: "jemain.arthur", text: "Great cut 10/10, fresh ash!! 🔥" },
+    { name: "sabeen.logan", text: "Cleanest cut ever 🔥🔥💯" },
+    { name: "jackyy._13", text: "He's the one. Great hospitality. Great cut. And great price 🔥" },
+    { name: "rohan_s_1023", text: "Fire cuts, good price and very good service 🔥🔥" },
+    { name: "wrd2ayaan", text: "Saved me and for a good price. Best barber in the GTA 🔥🔥" },
+    { name: "jamies_neww", text: "Best cut ever. Cheapest price ever. Best barber ever. Highly recommend!" },
+    { name: "kkumarxn", text: "10/10 cut, appreciate the attention to detail 🙌" },
+    { name: "db.nba", text: "Fire broooo, cleaned up me and my boys 10/10 fs" },
+    { name: "suri_aansh", text: "647cutz is a straight miracle worker" },
+    { name: "ankit._suri", text: "This man 647cutz made me a new man. 🔥" },
+    { name: "humzlz_21", text: "Fire cuts. Definitely a 10/10 🔥🔥🔥" },
+    { name: "itsminnb", text: "100% going back, amazing haircut and cheap price 🔥" },
+    { name: "sahil_t010", text: "Bro saved my hair. 10/10 mad clean" },
+    { name: "nathenfernandes", text: "Fire cuts 🔥🔥 10/10" },
+    { name: "aansh.k", text: "Cut clean ash 🔥🔥 def coming back" },
+    { name: "wyattjao_", text: "5⭐ 10/10 experience 🔥🔥" },
+    { name: "dhir.p11", text: "Crazy cut and has a good price 🔥🔥" },
+    { name: "gamshikan_", text: "Great cuts and nice barber" },
+    { name: "ricowoow", text: "Crazy good price. Cleaned me up really well. Overall the best barber I can recommend. 🙌" },
+    { name: "kajanan30_", text: "Barber did me right, I would recommend everyone to go to him. Good price as well." },
+    { name: "angelop515", text: "W barber did me right, will definitely come again" },
+    { name: "thanusan_sk", text: "Clean barber, got my cut right and lined me up for a solid price." },
+    { name: "shrvnk7", text: "Amazing service with a great price. Barber cleaned me up nice. Definitely coming again 🙏" },
+    { name: "ethanf0416", text: "Barber got me right 🔥🔥 good price" },
+    { name: "alessio.trbucco", text: "Crazy cut, dedicates time to customers, always goes 100%. Would recommend 🙌" },
+    { name: "senul_mw", text: "Insane customer service, proper cuts, def recommend 🔥🔥" },
+    { name: "dav.magcalas", text: "High quality cuts for a cheap price! 🔥💯" },
+    { name: "ozzyg04", text: "Great service and a W cut, I'm def coming back 🔥" },
+    { name: "zainm.__", text: "Took his time and got me right. Goated barber 🔥🔥" },
+    { name: "__jalen.m", text: "Great service. He got me right, 10/10 💯" },
+    { name: "s.vonn_", text: "W cut, takes his time to make it perfect. 10/10" },
+    { name: "rohan_shah45", text: "Cleaned me up and great price 🔥" },
+    { name: "prajean183", text: "Nice cuts and the guy is actually patient" },
+    { name: "sdnttrip", text: "Proper barber, knows what he's doing fs, comin back ✅" },
+    { name: "muhammmad905", text: "Great cuts. Great price. Excellent customer service 💯" },
+    { name: "nihaalchechi", text: "647cutz is the goat, bro bout to give me the sexiest cut of all time soon" },
+    { name: "lucashwwang", text: "Before the cut nobody was checking for me — now I get compliments everywhere 🔥" },
+    { name: "_yasinaziz", text: "Walked out with way more confidence than I walked in with. Appreciate you 647cutz 🔥" },
+    { name: "sanjayk5004", text: "Barber takes his time, does what you ask for, and cleaned me up fr. Appreciate the work 🙏" },
+    { name: "ip._07", text: "Great experience start to finish — his work was amazing and so was the turnaround time. Def recommend 🙏" },
+    { name: "ke9nu", text: "W cut, felt like a whole new me walking out 🔥" },
+    { name: "shaegosal", text: "This cut had people doing double takes all week 😂" },
+    { name: "nihaalchechi", text: "Real talk, this cut came through right when I needed it. 647cutz always delivers 🙏" },
+    { name: "_.suvarnan", text: "Used to feel down on my luck, then 647cutz gave me a cut that turned my whole outlook around. Forever grateful #Thankyou647cutz" },
+    { name: "farooquisaad", text: "Highkey one of the best barbers around — my whole family comes here now 🔥" },
+    { name: "caleb1nthecut", text: "Bro changed my whole look, def coming back 🔥 15/10" },
+    { name: "bilal.m_bk", text: "Literally changed my whole vibe after this cut — best cuts in Markham hands down" },
+    { name: "vithusans24", text: "This cut had people blowing up my Instagram after 🔥🔥" },
+    { name: "davanluu", text: "Fire cut, good service, n chill asf" },
+    { name: "nathan.prashad", text: "Fire cut and service 🔥🔥" },
+    { name: "huzaifa_416x", text: "Fireee cut and service 🔥🔥 recommend." },
+    { name: "jaylen_yuen", text: "Genuinely a clean cut 🙌 great service too" },
+    { name: "ruban007", text: "Great cut. My son liked it." },
+    { name: "_feen_", text: "Great job!" },
+    { name: "shubham_shukla08", text: "Good job 💈" },
+    { name: "lakshanbalaji_", text: "10/10 experience 🔥" },
+    { name: "tayyab_mahmood88", text: "Clean cuts 🔥🔥" },
+    { name: "_tyler.tom", text: "Great cut 🤝" },
+    { name: "9lopess", text: "Cleanest cut I've had for a while 🙌" },
+    { name: "rishkshah", text: "Awesome experience and a 🔥 cut" },
+    { name: "jamies_neww", text: "Might be the LeBron of cutting hair. 10/10 🔥🔥" },
+    { name: "adam___alk", text: "Amazing cut w barber 🔥" },
+    { name: "aansh.k", text: "Great cuts 🔥🔥" },
+    { name: "atishkotian", text: "10/10 fire cuts from a top tier barber 🔥🔥🔥" },
+    { name: "niithursan", text: "Nice and friendly, cuts hair well 👏" },
+    { name: "sehaj.gosal7", text: "Best barber I've been to" },
+    { name: "abruhnav", text: "Came for the first time and he got me so right" },
+    { name: "josh_karan08", text: "🔥 barber, 100% recommend" },
+    { name: "dxvd_ldn", text: "Slid hard, 10/10 🔥🔥🔥" },
+    { name: "nipun.sinhaa", text: "Came through 🔥" },
+    { name: "25vivekk", text: "647cutz blessed me 🙌" },
+    { name: "sidnavayath", text: "Fire fade" },
+    { name: "tanavmaji", text: "Love the cut, will def come back 🔥🔥" },
+    { name: "cartr.dang", text: "Certi cuts, clean tapers 🔥🔥🔥" },
+    { name: "ty.matias", text: "Clean cut and a clean shop, appreciate the cut bro 🙏" },
+    { name: "_.aathy._", text: "Clean cuts fr" },
+    { name: "bryanchao.20", text: "Great value, great cut for a super good price" },
+    { name: "kethanj_", text: "Tapers clean asf 🔥🔥" },
+    { name: "arulp_26", text: "Proper cut 🔥🔥🔥" },
+    { name: "cameronholung", text: "Came to the crib in rags and left in riches 🙌🔥" },
+    { name: "anoth.n", text: "Tuff barber" },
+    { name: "wpencer", text: "Best barber around and good prices 🔥" },
+    { name: "lucass_s_ss", text: "Come to 647cutz for some fire cuts. Fire cuts + fire prices, imma be back 100 🔥" },
+    { name: "alanbai_", text: "Got blessed 🙏🙏" },
+    { name: "avinb._", text: "Def going back" },
+    { name: "_bosco_21", text: "The fade is tuff asf, def coming back frfr 🔥" },
+    { name: "1carlton__", text: "Fire cuts" },
+    { name: "callyush", text: "Good ass cuts" },
+    { name: "sashaqtamant", text: "Y'all should def come here, he's tuff 🔥" },
+    { name: "kieren.m37", text: "Ima come here" },
+    { name: "j_el1809", text: "No way I can get this crispy for dirt cheap 😩" },
+    { name: "ysf.nv_", text: "Great service, amazing price, best barber in Markham." },
+    { name: "userr20s", text: "Took his time with the cut 💯🔥" },
+    { name: "r4ku1", text: "He's too neat with it" },
+    { name: "ishan.d21", text: "Great price, takes his time" },
+    { name: "l.nate815", text: "Cuts go crazy W barber" },
+    { name: "discodiprisco", text: "Great to work with" },
+    { name: "_vihan08_", text: "He's a really good barber with experience and consistent fire trims 🔥" },
+    { name: "pobc", text: "Good cuts, nice guy 🙏" },
+    { name: "jayy06z", text: "Clean and patient with it" },
+    { name: "7asifn", text: "Sick cut, good price, good guy 10/10 service" },
+    { name: "thiv.u", text: "Great service, proper cuts 🔥🔥. Will definitely go back‼️" },
+    { name: "aarib2shiftyyy", text: "Tuff 🙌" },
+    { name: "basement_barbersllc", text: "Clean always !! 🔥🔥" },
+    { name: "saa.surenn", text: "Clean as expected 🔥" },
+    { name: "dev.chandy", text: "Cuts go hard, 10/10" },
+    { name: "sulaimaank.19", text: "Crazy cuts 😳🔥" }
+  ];
+
+  let shown = 0;
+  const batchSize = 6;
+  const grid = document.getElementById('reviewsGrid');
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const reviewsCount = document.getElementById('reviewsCount');
+  const reviewsToggle = document.getElementById('reviewsToggle');
+  const reviewsBody = document.getElementById('reviewsBody');
+
+  function renderBatch(){
+    const next = reviews.slice(shown, shown + batchSize);
+    next.forEach(r => {
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.innerHTML = `<span class="quote-mark">"</span><p>${r.text}</p><span class="name">@${r.name}</span>`;
+      grid.appendChild(card);
+    });
+    shown += next.length;
+    reviewsCount.textContent = `Showing ${shown} of ${reviews.length} reviews`;
+    if (shown >= reviews.length){
+      loadMoreBtn.disabled = true;
+      loadMoreBtn.textContent = 'All Reviews Loaded';
+    }
+  }
+
+  reviewsToggle.addEventListener('click', () => {
+    const isOpen = reviewsBody.classList.toggle('open');
+    reviewsToggle.textContent = isOpen ? 'Hide Reviews' : 'See What Clients Are Saying';
+    if (isOpen && shown === 0){ renderBatch(); }
+  });
+
+  loadMoreBtn.addEventListener('click', renderBatch);
+</script>
 
 <div class="stripe-rule"></div>
 
